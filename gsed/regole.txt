@@ -1,0 +1,61 @@
+* Remember to update the latest version of the file, which should be in 
+    /red/Data/giuliani/gsed/data/
+   --> /ariel/hesw/gamma/gsed/data/
+
+
+* Extensions must not contain blanck spaces (use underscores)
+
+
+* All extension with capital letters 
+
+
+* If data from mission, put the instrument name	(HESS, FERMI, VERITAS..) as first
+  word, then use some simple label 
+  e.g.  HESS_2015_ICRC
+
+
+* If model, put MODEL_	(e.g., MODEL_2008, MODEL_AHARONIAN, MODEL_STUPID....)
+
+
+* EXTENSION 0: 
+  Add SOURCE keyword and coordinates in the primary extension
+
+  SOURCE will be the TEV name with NO spaces (TeVJ1826-148 - from TeVCat)
+  Coordinates will be galactic from from TeVCat (click on source)
+
+    fmodhead LS5039.fits+0 hsource.dat
+    where hsource.dat contains the lines: 
+    
+SOURCE 'TeVJ1826-148' / Source name
+L '11.18' / Gal long
+B '-0.09' / Gal lat
+
+
+* EXTENSION N:
+  Every extension must have a keyword PAPER
+  e.g.  PAPER :   MiaNonna2012,ApJ413, 45
+  
+  If you are creating the extension for the first time, call mkfits with the
+  keyword   PAPER='...' 
+
+  If you want to add the FITS keyword PAPER to an existing extension use the
+  command  fmodhead FILE.fits+ext htemp.dat
+
+   e.g. fmodhead LS5039.fits+2 htemp.dat
+   where htemp.dat contains, for example, the line:  PAPER 'Aharonian et al 2006 A&A 460, 743' 
+
+   Make sure you match the right paper to the right extention!
+
+* All columns (whichever extension) must be written in capital letters:
+   ENERGY, FLUX, etc
+
+*  Name the file with the TEV name (e.g. LS5039.fits should be TeVJ1826-148.fits - from http://tevcat.uchicago.edu/ )
+
+
+* Copy your file back in  /red/Data/giuliani/gsed/data/
+   --> /ariel/hesw/gamma/gsed/data/
+
+
+* Everytime you finish an update on one of your files, send AG/Ada an email
+
+Grazie!
