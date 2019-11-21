@@ -1,11 +1,11 @@
 
 
 
-###########################################################
-# Authors : S. Cutini (ASDC) and A. Giuliani (IASF Milano)
-# Last-Modified: 12/02/2018
-###########################################################
+# grbpy
 
+Search for GRBs in AGILE data
+
+Authors : S. Cutini (ASDC) and A. Giuliani (IASF Milano)
 
 
 
