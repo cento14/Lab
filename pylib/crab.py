@@ -16,7 +16,7 @@ def pl(en,k=1.,index=2,e_piv=1.):
 
 
 
-def crab(energy=[.1,10],model='hegra', giveme='intflux'):
+def crab(energy=[.1,10],model='hegra', giveme='intFlux'):
 
   try : 
     print('Input energy units :',energy.unit) 
