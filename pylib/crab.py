@@ -24,22 +24,6 @@ def crab(energy=[.1,10],model='hegra', giveme='intFlux'):
     energy=energy*u.TeV 
     print('Energy units set to Tev') 
 
-  if giveme == 'intFlux' :
-
-    emin=energy[0].to('TeV')
-    emax=energy[1].to('TeV')
-
-    dd=log10(emax/emin)
-
-    energy_b = 10**( arange(dd*1000.+1.)/1000. )* emin      # TeV           
-    de = energy_b[1:]-energy_b[:-1]
-
-    en = sqrt(energy_b[1:]*energy_b[:-1])
-
-  else :
-    
-    en=energy    
-    
 
   def hegra(en):   # HEGRA
 
@@ -72,22 +56,38 @@ def crab(energy=[.1,10],model='hegra', giveme='intFlux'):
     return flux
 
 
-  crabFlux={'hegra':hegra, 'amenomori':amenomori, 'hacw':hawc}
+  crabFlux={'hegra':hegra, 'amenomori':amenomori, 'hawc':hawc}
+
 
   try:
-    flux=crabFlux[model](en)
+    flux=crabFlux[model](energy)
   except: 
     print('Available models : ',crabFlux.keys())
     flux=0.
-
   
-  sed=flux*en*en.to('erg')
+  sed=flux*energy*energy.to('erg')
 
-  intFlux  = sum(flux*de )
-  intFluxE = sum(flux*de *en.to('erg'))
+  results={'flux':flux,'sed':sed}
 
-  
-    
+  if giveme == 'intFlux' :
 
-  return intFlux,intFluxE
+    emin=energy[0].to('TeV')
+    emax=energy[1].to('TeV')
+
+    dd=log10(emax/emin)
+
+    energy_b = 10**( arange(dd*1000.+1.)/1000. )* emin      # TeV           
+    de = energy_b[1:]-energy_b[:-1]
+
+    en = sqrt(energy_b[1:]*energy_b[:-1])
+
+    flux=crabFlux[model](en)
+
+    intFlux  = sum(flux*de )
+    intFluxE = sum(flux*de *en.to('erg'))
+
+    results['intFlux']= [intFlux,intFluxE]
+
+
+  return results[giveme]
 
