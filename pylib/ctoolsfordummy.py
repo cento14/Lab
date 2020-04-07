@@ -3,6 +3,8 @@ from numpy import *
 from matplotlib.pyplot import *
 from astropy.table import Table 
 from astropy import units as u
+from astropy.coordinates import SkyCoord
+import regions
 
 import gammalib, ctools, cscripts  #, gammapy
 
@@ -39,7 +41,7 @@ def createObs(outfile='obs.xml', name ='o1', id='0', lon=0.0, lat=0.0, emin=0.1e
   '    </observation> \n',
   '</observation_list>\n',
   '\n']
-  
+ 
   code[2] = code[2].replace('iSNR_0',name)
   code[2] = code[2].replace('asdfg',id)
   code[3] = code[3].replace('888',str(lon))
@@ -51,17 +53,18 @@ def createObs(outfile='obs.xml', name ='o1', id='0', lon=0.0, lat=0.0, emin=0.1e
   code[8] = code[8].replace('1dc',database)
   code[8] = code[8].replace('South_z20_50h',response)
   
-  
+
   if evtfile != '' :
-      evtlist='       <parameter name="EventList" file="'+evtfile+'" /> \n'
-      code.insert(3,evtlist)
+    evtlist='       <parameter name="EventList" file="'+evtfile+'" /> \n'
+    code.insert(3,evtlist)
   
-  print(('Writing file : '+outfile))
-  obs = open(outfile, 'w')
-  obs.writelines(code)
-  obs.close()
+  if outfile != '' :
+    print(('Writing file : '+outfile))
+    obs = open(outfile, 'w')
+    obs.writelines(code)
+    obs.close()
   
-  return code
+  return code[2:-2]
 
 
 def createModel(outfile='model.xml',specfile='specfile.txt', mapfile='mapfile.fits'):
@@ -160,39 +163,68 @@ def createModel3(outfile='model.xml',lon=0.0,lat=0.0,specfile='specfile.txt', ma
   return code
 
 
-class xmlModel:                                                                                                                                                         
-  def __init__(self, file_name):                                                                                                                                        
-    self.models = gammalib.GModels(file_name)                                                                                                                          
+class xmlModel: 
+  def __init__(self, file_name):    
+    self.models = gammalib.GModels(file_name)                              
                                                                    
   def PL(self, sname, plotta=True):
-     k     = self.models[sname]["Prefactor"].value()                                                                                                                         
-     index = self.models[sname]["Index"].value()                                                                                                                             
-     e_piv = self.models[sname]["PivotEnergy"].value()                                                                                                                       
+     k     = self.models[sname]["Prefactor"].value()       
+     index = self.models[sname]["Index"].value()                                 
+     e_piv = self.models[sname]["PivotEnergy"].value()       
                                                                                                                                                             
-     en = 10**( arange(110)/20. ) * 1e3                # MeV                                                                                                         
-     f = k * (en / e_piv)**(index)                        # ph / cm2 s MeV                                                                                             
-                                                              
+     en = 10**( arange(110)/20. ) * 1e3                # MeV                
+     f = k * (en / e_piv)**(index)                        # ph / cm2 s MeV     
      if plotta: 
-       loglog()                                                                                                                                                       
-       plot(en*1e6,f*en**2.*1.6e-6)                                                                                                                               
+       loglog()                                                                                         
+       plot(en*1e6,f*en**2.*1.6e-6)                                                             
                                                               
-     return en*1e6*u.eV,f*en**2.*1.6e-6*u.TeV                                                                                                                                                    
+     return en*1e6*u.eV,f*en**2.*1.6e-6*u.TeV    
                                                               
   def PLC(self, sname, plotta=True):
-     k     = self.models[sname]["Prefactor"].value()                                                                                                                         
-     index = self.models[sname]["Index"].value()                                                                                                                             
-     e_piv = self.models[sname]["PivotEnergy"].value()                                                                                                                       
-     ecut  = self.models[sname]["CutoffEnergy"].value()                                                                                                                      
+     k     = self.models[sname]["Prefactor"].value()    
+     index = self.models[sname]["Index"].value()                                                                     
+     e_piv = self.models[sname]["PivotEnergy"].value()                                                                
+     ecut  = self.models[sname]["CutoffEnergy"].value()                                          
                                                                                                                                                             
-     en = 10**( arange(110)/20. ) * 1e3                # MeV                                                                                                         
-     f = k * (en / e_piv)**(index) * exp(-en / ecut)    # ph / cm2 s MeV                                                                                             
+     en = 10**( arange(110)/20. ) * 1e3                # MeV                            
+     f = k * (en / e_piv)**(index) * exp(-en / ecut)    # ph / cm2 s MeV           
         
      if plotta: 
-       loglog()                                                                                                                                                       
-       plot(en*1e6,f*en**2.*1.6e-6)                                                                                                                               
-                                                              
-     #fig.show()                                                                                                                                                        
-     return en*1e6*u.eV,f*en**2.*1.6e-6*u.TeV                                                      
+       loglog()                                  
+       plot(en*1e6,f*en**2.*1.6e-6)       
+
+     return en*1e6*u.eV,f*en**2.*1.6e-6*u.TeV             
+     
+     
+  def toreg(self,regfile='file.reg'):
+  
+    regs=[]
+    for model in self.models:
+      
+      try:
+        s = SkyCoord(model['RA'].value() ,model['DEC'].value(), frame='icrs',unit='deg')  
+        
+        try : 
+          radius = model['Radius'].value() * u.deg
+        except:
+          radius= 0.01 * u.deg
+          
+        reg= regions.CircleSkyRegion(s, radius)
+        reg.meta['label']= model.name()
+        reg.visual['color']='Yellow'
+        regs = regs + [reg] 
+         
+      except:
+        print(model.name()+ ' non lo faccio!')
+           
+    print ('  Writing file : ',regfile) 
+    regions.write_ds9(regs,regfile)                                                                                                                                                                   
+
+
+     
+     
+     
+                                              
 
 
 def stackedPipeline(obsfile='index.xml', l=0.01, b=0.01, emin=0.1, emax=100.0,
@@ -346,6 +378,7 @@ def stackedPipeline(obsfile='index.xml', l=0.01, b=0.01, emin=0.1, emax=100.0,
 
     # Return
     return
+
 
 
 
