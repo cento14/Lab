@@ -213,13 +213,17 @@ class source():
           
     
       if outfile == 0 :
-        print((i, ext.name,))
+        print(i, ext.name, end = '')
         
         if 'PAPER' in head:
-            print((head['PAPER'],))
+            print(', ',head['PAPER'], end = '')
+        else:
+            print('', end = ' ')
             
         if 'COMMENT' in head:
-            print((head['COMMENT']))
+            print(', ',head['COMMENT'])
+        else:
+            print('')
           
           
       if not ext.is_image  :
@@ -256,7 +260,23 @@ class source():
 
   def ListModels(self):
     for ext in self.exts[1:]:
-      print('model: %s' % ext.name)
+      
+      #print('model: %s' % ext.name)
+      print(ext.name, end = '')     
+      head = ext.header
+      
+      if 'PAPER' in head:
+          print(', ',head['PAPER'], end = '')
+      else:
+          print('', end = ' ')
+           
+      if 'COMMENT' in head:
+          print(', ',head['COMMENT'])
+      else:
+          print('')
+ 
+      
+      
 
   def ToXML(self, src_lib, ext_model = 'MODEL'):
     spec_file_name = '%s.txt' % self.name.replace(' ','')
