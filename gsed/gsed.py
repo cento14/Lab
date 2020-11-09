@@ -22,11 +22,26 @@ import matplotlib.pyplot as fig
 from numpy import *
 import numpy as np
 
-__version__ = '2018-02-16'
+__version__ = '2020-02-16'
+
 class catalog():
-  def __init__(self, file_name = '/ariel/hesw/gamma/gsed/index.fits'):
+  def __init__(self, file_name = 'index.fits'):
     self.index = Table.read(file_name)
     self.path = os.path.dirname(os.path.abspath(file_name))
+  
+  
+  def getSource(self, n):
+    src=self.index[n]
+    srcfile = (self.path+'/'+src['PATH']+'/'+src['Data_File']).replace(' ','')
+    s=source(file_name=srcfile)
+    return s
+  
+  def find(self,patt):
+    for i in arange(len(self.index)):
+      if (self.index['SNR_Name'][i].find(patt) != -1)+(self.index['Other_Names'][i].find(patt) != -1) :
+        print( i, self.index['SNR_Name'][i], self.index['Other_Names'][i])
+        
+  
   
   # you can pass either celestial or Galactic coordinates, as
   # named arguments, or celestial, if positional
@@ -232,10 +247,14 @@ class source():
         if ext.name[0:5] == 'MODEL' :
           fig.plot(ext.data['Energy'],ext.data['Flux'],'-',color=col[i],label=ext.name)
         else :
-          fig.errorbar(ext.data['Energy'],ext.data['Flux'],yerr=[ext.data['FLUX_ERROR_MIN']*nsig,ext.data['FLUX_ERROR_MAX']*nsig],fmt=point,color=col[i],label=ext.name)
-          w=where(ext.data['Flux'] == 0.)
-          #print w
-          fig.errorbar(ext.data['Energy'][w],ext.data['FLUX_ERROR_MAX'][w],ext.data['FLUX_ERROR_MAX'][w]*.2,uplims=True,fmt=point,color=col[i])
+          w=where(ext.data['Flux'] != 0.)
+          fig.errorbar(ext.data['Energy'][w], ext.data['Flux'][w],
+                       yerr=[ext.data['FLUX_ERROR_MIN'][w]*nsig,ext.data['FLUX_ERROR_MAX'][w]*nsig],
+                       fmt=point,color=col[i],label=ext.name)
+          wul=where(ext.data['Flux'] == 0.)
+          fig.errorbar(ext.data['Energy'][wul], ext.data['FLUX_ERROR_MAX'][wul],
+                       ext.data['FLUX_ERROR_MAX'][wul]*.2,
+                       uplims=True,fmt=point,color=col[i])
 
     if over != 0 : 
       return

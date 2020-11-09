@@ -93,6 +93,15 @@ def crab(energy=[.1,10],model='hegra', giveme='intFlux'):
 
     return flux
   
+  def magic(en):          # Magic model (Log.Par,  Aleksic 2015)
+
+    k = 3.23e-11  *(u.cm**2 *u.s*u.TeV)**-1  
+    alpha = 2.47
+    beta = -0.24
+    e_piv = 1. *u.TeV
+    flux = k * (en / e_piv)**(-alpha+beta*log10(en/e_piv))   #log10 !
+
+    return flux
 
   def meyer(en):
 
@@ -109,8 +118,8 @@ def crab(energy=[.1,10],model='hegra', giveme='intFlux'):
     return flux
     
 
-
-  crabFlux={'hegra':hegra, 'amenomori':amenomori, 'hawc':hawc, 'meyer':meyer}
+  crabFlux={'hegra':hegra, 'amenomori':amenomori, 
+            'hawc':hawc, 'magic':magic, 'meyer':meyer}
 
 
   try:

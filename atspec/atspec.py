@@ -9,7 +9,7 @@ import numpy
 import matplotlib.pyplot as plt 
 
 class pointsource:
- def __init__(self,evtfile="",insfile="",l=0.,b=-100., name=''):
+ def __init__(self,evtfile="",insfile="", l=0.,b=-100., name='', exrad=0.):
   
 
   if evtfile == '' :
@@ -120,19 +120,26 @@ class pointsource:
   
   
   ### S.Extraction
-
-
-  self.exrad=numpy.interp(self.enetot,10.**self.lene_c,self.r80_c)*u.degree
-  self.corr=0.8
-  #self.corr=0.75
-  #self.corr=0.68
   
+  if exrad != 0. :
+    try:
+      exrad=exrad.to('deg')
+    except:
+      exrad=exrad*u.deg
+    self.exrad = exrad *self.enetot**0. 
+    self.corr = 1.0
+  else :
+    self.exrad=numpy.interp(self.enetot,10.**self.lene_c,self.r80_c)*u.degree
+    self.corr=0.8
+    #self.corr=0.75
+    #self.corr=0.68
 
-  ww=numpy.where(self.d < .5*u.degree) 
-  plt.hist2d(dir_ph[ww].galactic.l,dir_ph[ww].galactic.b,bins=200)
+  radius=numpy.mean(self.exrad.value)  
+  ww=numpy.where(self.d < 3.5*radius*u.degree) 
+  plt.hist2d(dir_ph[ww].galactic.l.value,dir_ph[ww].galactic.b.value,bins=200)
   
   acic=numpy.arange(0,2*numpy.pi,.01)
-  radius=numpy.mean(self.exrad.value)
+
   #print radius,l,b
   plt.plot(radius*numpy.cos(acic)+l, radius*numpy.sin(acic)+b,'w-')
   plt.plot(2*radius*numpy.cos(acic)+l, 2*radius*numpy.sin(acic)+b,'w--')
