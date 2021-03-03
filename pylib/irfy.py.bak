@@ -259,7 +259,7 @@ def func_pulsed2gau(x, k11, s11,k22, x0): # for 2 gauss
     return k11/np.sqrt(2*np.pi*s11**2)  * np.exp((-(x-x0)**2)/(2*s11**2)) + k22/np.sqrt(2*np.pi*sigma_bkg[i]**2)  * np.exp((-(x)**2)/(2*sigma_bkg[i]**2))   # 3 gauss (1 data, 2 bkg)     ...
 
 def fit_hist_bkg(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.array([10000, 0.1]),func=func_pulsedgau):
-    print("Estimate the shape of the distribution: ...")
+    print "Estimate the shape of the distribution: ..."
     psf = np.zeros(len(ene_d),float)
     norm_bkg = np.zeros((3,len(ene_d)),float)
     sigma_bkg = np.zeros((3,len(ene_d)),float)
@@ -286,7 +286,7 @@ def fit_hist_bkg(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.arr
         #            sigma_bkg[2,i] = fitParams[8]
         #            err_norm_bkg[2,i] = fitCovariances[7,7]**0.5
         #            err_sigma_bkg[2,i] = fitCovariances[8,8]**0.5
-        print("sigma1:",fitParams[1], '+\-', fitCovariances[1,1]**0.5, "; Norm1:",fitParams[0], '+\-', fitCovariances[0,0]**0.5)
+        print "sigma1:",fitParams[1], '+\-', fitCovariances[1,1]**0.5, "; Norm1:",fitParams[0], '+\-', fitCovariances[0,0]**0.5
         #print "mean1:",fitParams[3], '+\-', fitCovariances[3,3]**0.5, "; mean2:",fitParams[6], '+\-', fitCovariances[6,6]**0.5, "; mean3:",fitParams[9], '+\-', fitCovariances[9,9]**0.5
         plt.ylim(0,max(aa1)+10.)
         plt.errorbar(bb2, aa1, yerr = aa1**0.5, fmt = 'red')
@@ -296,7 +296,7 @@ def fit_hist_bkg(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.arr
 
 
 def fit_hist_theta2(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.array([10000, 0.1]),func=func_pulsedgau):
-    print("Estimate the shape of the distribution: ...")
+    print "Estimate the shape of the distribution: ..."
     psf = np.zeros(len(ene_d),float)
     norm_bkg = np.zeros((3,len(ene_d)),float)
     sigma_bkg = np.zeros((3,len(ene_d)),float)
@@ -323,7 +323,7 @@ def fit_hist_theta2(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.
         #            sigma_bkg[2,i] = fitParams[8]
         #            err_norm_bkg[2,i] = fitCovariances[7,7]**0.5
         #            err_sigma_bkg[2,i] = fitCovariances[8,8]**0.5
-        print("sigma1:",fitParams[1], '+\-', fitCovariances[1,1]**0.5, "; Norm1:",fitParams[0], '+\-', fitCovariances[0,0]**0.5, "Cost = ", fitParams[2])
+        print "sigma1:",fitParams[1], '+\-', fitCovariances[1,1]**0.5, "; Norm1:",fitParams[0], '+\-', fitCovariances[0,0]**0.5, "Cost = ", fitParams[2]
         #print "mean1:",fitParams[3], '+\-', fitCovariances[3,3]**0.5, "; mean2:",fitParams[6], '+\-', fitCovariances[6,6]**0.5, "; mean3:",fitParams[9], '+\-', fitCovariances[9,9]**0.5
         plt.ylim(0,max(aa1)+10.)
         plt.errorbar(bb2, aa1, yerr = aa1**0.5, fmt = 'red')
@@ -333,7 +333,7 @@ def fit_hist_theta2(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.
 
 
 def fit_hist_src_bkg(ene_d, func_pulsed2gau, evt1, ene_evt1, delta_integr, offset):
-    print("\nEstimate the shape of the distribution: ...")
+    print "\nEstimate the shape of the distribution: ..."
     norm_src = np.zeros((len(ene_d)),float)
     norm_bkg2 = np.zeros((len(ene_d)),float)
     sigma_src = np.zeros((len(ene_d)),float)
@@ -346,7 +346,7 @@ def fit_hist_src_bkg(ene_d, func_pulsed2gau, evt1, ene_evt1, delta_integr, offse
         err_aa1 = [1e2 if x==0 else x for x in err_aa1]
         guess = np.array([10000, 0.10,100, offset])
         fitParams, fitCovariances = optimization.curve_fit(func_pulsed2gau, bb2, aa1, guess, sigma=err_aa1, maxfev=100000)
-        print("sigma :",fitParams[1], '+\-', fitCovariances[1,1]**0.5)
+        print "sigma :",fitParams[1], '+\-', fitCovariances[1,1]**0.5
         plt.ylim(0,max(aa1)+10.)
         plt.errorbar(bb2, aa1, yerr = aa1**0.5, fmt = 'red')
         plt.plot(bb2,func_pulsed2gau(bb2,fitParams[0],fitParams[1],fitParams[2],fitParams[3]))
@@ -369,7 +369,7 @@ def make_hist(ene_d, ene_u, evt2, ene_evt2, delta_integr, i, range):
     bb2 = np.delete(bb2, 0)
     bb3 = bb2
     nevt = len(index2[0])
-    print(nevt)
+    print nevt
     #print "Number of events:", len(index2)
     return bb2, aa1, bb3, nevt
 
@@ -400,7 +400,7 @@ def make_hist_theta2(ene_d, ene_u, evt2, ene_evt2, delta_integr, i, range):
     bb2 = np.delete(bb2, 0)
     bb3 = bb2
     nevt = len(index2[0])
-    print(nevt)
+    print nevt
     #print "Number of events:", len(index2)
     return bb2, aa1, bb3, nevt
 
@@ -483,7 +483,7 @@ def fill_psf_irf(tab,psf1_refill,psf2_refill,psf3_refill,psf4_refill):
     return tab
 
 def fit_hist_MC(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.array([10000, 0.1]),func=func_pulsedgau):
-    print("Estimate the shape of the distribution: ...")
+    print "Estimate the shape of the distribution: ..."
     norm_bkg = np.zeros((3,len(ene_d)),float)
     sigma_bkg = np.zeros((3,len(ene_d)),float)
     err_norm_bkg = np.zeros((3,len(ene_d)),float)
@@ -509,14 +509,14 @@ def fit_hist_MC(ene_d, ene_u, evt2, ene_evt2, delta_integr, range, guess=np.arra
             err_norm_bkg[1,i] = fitCovariances[3,3]**0.5
             err_sigma_bkg[1,i] = fitCovariances[4,4]**0.5
             aeff_corr[0,i] = ((np.sqrt(2*np.pi)*norm_bkg[0,i]*np.sqrt((sigma_bkg[0,i])**2))/delta_integr + (np.sqrt(2*np.pi)*norm_bkg[1,i]*np.sqrt((sigma_bkg[1,i])**2))/delta_integr) / nevt
-            print("Number of events under the gaussian", aeff_corr[0,i], nevt, ((np.sqrt(2*np.pi)*norm_bkg[0,i]*np.sqrt((sigma_bkg[0,i])**2)) + (np.sqrt(2*np.pi)*norm_bkg[1,i]*np.sqrt((sigma_bkg[1,i])**2)))/delta_integr)
-            print("sigma1:",np.round(fitParams[1],3), '+\-', np.round(fitCovariances[1,1]**0.5,5), "; Norm1:",np.round(fitParams[0],2), '+\-', np.round(fitCovariances[0,0]**0.5,2), "\nsigma2:",np.round(fitParams[4],3), '+\-', np.round(fitCovariances[4,4]**0.5,4), "; Norm2:",np.round(fitParams[3],2), '+\-', np.round(fitCovariances[3,3]**0.5,2))
+            print "Number of events under the gaussian", aeff_corr[0,i], nevt, ((np.sqrt(2*np.pi)*norm_bkg[0,i]*np.sqrt((sigma_bkg[0,i])**2)) + (np.sqrt(2*np.pi)*norm_bkg[1,i]*np.sqrt((sigma_bkg[1,i])**2)))/delta_integr
+            print "sigma1:",np.round(fitParams[1],3), '+\-', np.round(fitCovariances[1,1]**0.5,5), "; Norm1:",np.round(fitParams[0],2), '+\-', np.round(fitCovariances[0,0]**0.5,2), "\nsigma2:",np.round(fitParams[4],3), '+\-', np.round(fitCovariances[4,4]**0.5,4), "; Norm2:",np.round(fitParams[3],2), '+\-', np.round(fitCovariances[3,3]**0.5,2)
         if len(fitParams)==7:
             norm_bkg[2,i] = fitParams[5]
             sigma_bkg[2,i] = fitParams[6]
             err_norm_bkg[2,i] = fitCovariances[5,5]**0.5
             err_sigma_bkg[2,i] = fitCovariances[6,6]**0.5
-            print("sigma1:",np.round(fitParams[1],3), '+\-', np.round(fitCovariances[1,1]**0.5,5), "; Norm1:",np.round(fitParams[0],2), '+\-', np.round(fitCovariances[0,0]**0.5,2), "\nsigma2:",np.round(fitParams[4],3), '+\-', np.round(fitCovariances[4,4]**0.5,4), "; Norm2:",np.round(fitParams[3],2), '+\-', np.round(fitCovariances[3,3]**0.5,2), "\nsigma3:", np.round(fitParams[6],3), '+\-', np.round(fitCovariances[6,6]**0.5,4), "; Norm3:",np.round(fitParams[5],2), '+\-', np.round(fitCovariances[5,5]**0.5,2))
+            print "sigma1:",np.round(fitParams[1],3), '+\-', np.round(fitCovariances[1,1]**0.5,5), "; Norm1:",np.round(fitParams[0],2), '+\-', np.round(fitCovariances[0,0]**0.5,2), "\nsigma2:",np.round(fitParams[4],3), '+\-', np.round(fitCovariances[4,4]**0.5,4), "; Norm2:",np.round(fitParams[3],2), '+\-', np.round(fitCovariances[3,3]**0.5,2), "\nsigma3:", np.round(fitParams[6],3), '+\-', np.round(fitCovariances[6,6]**0.5,4), "; Norm3:",np.round(fitParams[5],2), '+\-', np.round(fitCovariances[5,5]**0.5,2)
         plt.ylim(0,max(aa1)+10.)
         plt.errorbar(bb2, aa1, yerr = aa1**0.5, fmt = 'red')
         plt.plot(bb2,func(bb2,*fitParams))
