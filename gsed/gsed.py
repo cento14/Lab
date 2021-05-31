@@ -216,7 +216,7 @@ class source():
     #print self.name
 
 
-    col = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black', \
+    col = ['blue','purple', 'orange', 'cyan', 'magenta', 'yellow', 'black', \
            'blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black', \
            'blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'  ]
 
