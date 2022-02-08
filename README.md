@@ -1,3 +1,4 @@
 # Lab
 
-Python routines written by me
+Random Python routines for HE Astrophysics
+
