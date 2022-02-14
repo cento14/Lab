@@ -104,7 +104,8 @@ def fermiCat(sourceName='4FGL J0000.3-7355'):
     return s
     
 
-def fromFermi( file = pth + 'fgl4.fits' ):
+def fromFermi( file = pth + 'gll_psc_v28.fit' ):
+#def fromFermi( file = pth + 'fgl4.fits' ):
     
     fgl = Table.read( file, 1)
     
