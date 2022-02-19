@@ -90,10 +90,12 @@ class cat():
 #%%  Fermi
 
 pth = os.environ['HOME']+'/inafCloud/databases/catalogs/'
+fermicatfile = 'gll_psc_v28.fit'
+
 
 def fermiCat(sourceName='4FGL J0000.3-7355'):
     
-    fgl = Table.read( pth+ 'fgl4.fits', 1)
+    fgl = Table.read( pth+ fermicatfile, 1)
     s = ''
     
     for source in fgl:
@@ -104,7 +106,7 @@ def fermiCat(sourceName='4FGL J0000.3-7355'):
     return s
     
 
-def fromFermi( file = pth + 'gll_psc_v28.fit' ):
+def fromFermi( file = pth + fermicatfile ):
 #def fromFermi( file = pth + 'fgl4.fits' ):
     
     fgl = Table.read( file, 1)
