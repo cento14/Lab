@@ -54,6 +54,30 @@ def pl(en,k=1.,index=2,e_piv=1.):
   return flux
 
 
+
+def butterfly( e_piv = 2e3,  indexes = [1.5, 2.5], ks = [10, 20],  erange = [ 1000, 10000], color = 'blue', label ='' ):
+
+    xx = logspace(log10(erange[0]), log10(erange[1]), 100)
+        
+    ymn = []
+    ymx = []
+    
+    for x in xx :
+
+       ys = [pl(x,index=indexes[0],k=ks[0],e_piv=e_piv),
+             pl(x,index=indexes[0],k=ks[1],e_piv=e_piv),
+             pl(x,index=indexes[1],k=ks[0],e_piv=e_piv),
+             pl(x,index=indexes[1],k=ks[1],e_piv=e_piv) ]
+
+       ymn = ymn + [min( ys )]
+       ymx = ymx + [max( ys )]
+    
+    fill_between(xx,ymn,ymx, facecolor = color, label = label)
+
+    return
+
+
+
 def crab(energy=[.1,10],model='hegra', giveme='intFlux'):
 
   try :
