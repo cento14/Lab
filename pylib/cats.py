@@ -17,15 +17,36 @@ from astropy.coordinates import SkyCoord
 import regions
 
       
-#%%   cat e' una table con una colonna 'SkyDir' di tipo skycoord, una 'Name' e una 'Size'
+#%%   cat e' una table con una colonna 'SkyDir' di tipo skycoord icrs, una 'Name' e una 'Size'
 
 
 class cat(): 
 
     def __init__(self, cd):
-        self.table = cd
+        
+       if type(cd) == type(Table()):
+           self.table = cd
 
+       else :
+           tcd = Table.read(cd)
+           self.table = tcd
     
+       self.comment = []
+            
+    # def from_file(file):
+    #    tcd = Table.read(file) 
+       
+         
+    # def read(self,infile):
+    #     cd = Table.read(infile)
+    #     self.table = cd
+    #     self.comment = []
+
+      
+    def write(self,outfile):
+        self.table.write(outfile)
+ 
+
     def toReg(self, regfile='pippo.reg'):
     
         cc = self.table
@@ -83,8 +104,27 @@ class cat():
         
         return newccz
         
-                                                                                                                                                                 
-  
+    def addComment(self, cmnt):
+        self.comment = self.comment + [cmnt]
+        
+        
+    def addSource(self,name):        
+                
+        self.table.add_row(self.table[0])
+        newrow = self.table[-1]
+        
+        for k in newrow.keys():
+            try:
+                newrow[k] = 0
+            except :
+                newrow[k] = newrow[k]
+
+        newrow['Name'] = name
+        newrow['SkyDir'] = SkyCoord.from_name(name)
+        
+        
+
+        
 
       
 #%%  Fermi
@@ -118,7 +158,8 @@ def fromFermi( file = pth + fermicatfile ):
     cdc['SkyDir'] = ss
     cdc['Size'] = fgl['Conf_68_SemiMajor']
     
-    ccz = cat(cdc)
+    ccz = cat(cdc)    
+    
     return ccz
     
 
@@ -152,9 +193,19 @@ def fromGammaCat(file = catfile):
 
 #%%  LHAASO
 
+pth = os.environ['HOME']+'/inafCloud/databases/catalogs/'
 
-# t = Table.read('lhaaso.txt', format='ascii')
+def fromLhaaso(file =pth+'lhaaso.txt' ):
 
+  cdc = Table.read(file, format='ascii')
+  cdc['SkyDir'] = SkyCoord(cdc['RA'], cdc['dec'], unit='deg',frame='icrs')
+  cdc['Size'] = '0.5'
+    
+  ccz = cat(cdc)    
+  ccz.addComment('Sizes set to 0.5')
+
+  return ccz
+  
 # print('Name, Distance [deg], Association , Class')
 # for s in t:
 #     sc = SkyCoord(s['RA'],s['dec'],frame='icrs',unit='deg')
@@ -164,10 +215,21 @@ def fromGammaCat(file = catfile):
       
       
 
+#%%
 
+pth = os.environ['HOME']+'/inafCloud/databases/catalogs/'
 
+def fromHawc(file =pth+'3hwc_part1.txt' ):
+    
+  cdc = Table.read(file, format='ascii')
+  cdc['SkyDir'] = SkyCoord(cdc['RAdeg'], cdc['DEdeg'], unit='deg',frame='icrs')
+  cdc['Size'] = cdc['Radius']
+  cdc['Name'] = cdc['HAWC']
 
+  ccz = cat(cdc)    
 
+  return ccz
+  
 
 
 
