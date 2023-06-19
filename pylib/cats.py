@@ -48,7 +48,7 @@ class cat():
  
 
     def toReg(self, regfile='pippo.reg'):
-    
+        # reg <= 0.5
         cc = self.table
         regs=[]
         
