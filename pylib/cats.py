@@ -199,7 +199,7 @@ def fromLhaaso(file =pth+'lhaaso.txt' ):
 
   cdc = Table.read(file, format='ascii')
   cdc['SkyDir'] = SkyCoord(cdc['RA'], cdc['dec'], unit='deg',frame='icrs')
-  cdc['Size'] = '0.5'
+  cdc['Size'] = 0.5*u.deg
     
   ccz = cat(cdc)    
   ccz.addComment('Sizes set to 0.5')
@@ -223,7 +223,7 @@ def fromHawc(file =pth+'3hwc_part1.txt' ):
     
   cdc = Table.read(file, format='ascii')
   cdc['SkyDir'] = SkyCoord(cdc['RAdeg'], cdc['DEdeg'], unit='deg',frame='icrs')
-  cdc['Size'] = cdc['Radius']
+  cdc['Size'] = cdc['ePos']
   cdc['Name'] = cdc['HAWC']
 
   ccz = cat(cdc)    
