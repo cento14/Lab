@@ -213,7 +213,20 @@ def fromLhaaso(file =pth+'lhaaso.txt' ):
 #     if d < 1*u.deg:
 #       print( s['name'],d.deg , p['common_name'], p['classes'] )
       
-      
+     
+        
+     
+def fromLhaaso90(file =pth+'lhaaso_catalog.fits' ):
+
+  cdc = Table.read(file, format='fits')
+  cdc['SkyDir'] = SkyCoord(cdc['ra'], cdc['dec'], unit='deg',frame='icrs')
+  cdc['Size'] = cdc['sigma']
+  cdc['Name'] = cdc['name']
+    
+  ccz = cat(cdc)    
+
+  return ccz
+        
 
 #%%
 
