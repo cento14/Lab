@@ -221,6 +221,7 @@ def fromLhaaso90(file =pth+'lhaaso_catalog.fits' ):
   cdc = Table.read(file, format='fits')
   cdc['SkyDir'] = SkyCoord(cdc['ra'], cdc['dec'], unit='deg',frame='icrs')
   cdc['Size'] = cdc['sigma']
+  cdc['Size'].unit = 'deg'
   cdc['Name'] = cdc['name']
     
   ccz = cat(cdc)    
