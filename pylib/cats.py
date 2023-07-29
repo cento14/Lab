@@ -72,7 +72,12 @@ class cat():
             regs = regs + [reg] 
              
         print ('  Writing file : ',regfile) 
-        regions.write_ds9(regs,regfile) 
+        
+        try : 
+            regions.write_ds9(regs,regfile) 
+        except :
+            print('Failed!')
+            print(regions.__version__)
         
     
     
@@ -243,6 +248,22 @@ def fromHawc(file =pth+'3hwc_part1.txt' ):
 
   return ccz
   
+
+
+#%%
+
+
+
+def from_rice( file=os.environ['HOME']+'/inafCloud/MolClouds/MilkyWay/cloud_catalog.fits' ):
+        
+  cdc = Table.read(file)
+  cdc['SkyDir'] = SkyCoord(cdc['l (deg)'], cdc['b (deg)'], unit='deg',frame='galactic')
+  cdc['Size'] = cdc['radius']
+  cdc['Name'] = cdc['cloud index']
+
+  ccz = cat(cdc)    
+
+  return ccz
 
 
 
