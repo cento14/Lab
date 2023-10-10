@@ -40,12 +40,17 @@ try :
 except :
   print('Gammalib not found')
 
-
 try :
   import regions
   print('regions: ', regions.__version__)
 except :
   print('regions not found')
+
+try :
+  import specsim
+  print('specsim: ', specsim.__version__)
+except :
+  print('specsim not found')
 
 
 

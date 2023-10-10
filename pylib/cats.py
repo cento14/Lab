@@ -73,11 +73,12 @@ class cat():
              
         print ('  Writing file : ',regfile) 
         
-        try : 
-            regions.write_ds9(regs,regfile) 
-        except :
-            print('Failed!')
-            print(regions.__version__)
+        # try : 
+        #     #regions.write_ds9(regs,regfile) 
+        regions.ds9.write._write_ds9(regs,regfile)
+        # except :
+        #     print('Failed!')
+        #     print(regions.__version__)
         
     
     
