@@ -106,6 +106,8 @@ class cat():
             ii = where(b < radius)
     
         newtab = tab[ii]
+        if len(newtab) == 0 : print(' ! No matches')
+        
         newccz = cat(newtab)
         
         return newccz
@@ -129,13 +131,12 @@ class cat():
         newrow['SkyDir'] = SkyCoord.from_name(name)
         
         
-
+#%%  Paths 
         
-
-      
-#%%  Fermi
-
 pth = os.environ['HOME']+'/inafCloud/databases/catalogs/'
+  
+#  Fermi
+
 fermicatfile = 'gll_psc_v28.fit'
 
 
@@ -169,9 +170,7 @@ def fromFermi( file = pth + fermicatfile ):
     return ccz
     
 
-
-
-#%%    GammaCat
+#    GammaCat
 
 catfile = os.environ['HOME']+'/git/gamma-cat/output/gammacat.fits.gz'
 
@@ -187,19 +186,14 @@ def fromGammaCat(file = catfile):
 
     return ccz
 
-
 # def fromGammaCat(coord):
 #   cat2=Table.read(os.environ['HOME']+'/git/gamma-cat/output/gammacat.fits.gz')
 #   cat2_coord = SkyCoord(cat2['ra'], cat2['dec'],frame='icrs')
 #   idx, d2d, d3d = coord.match_to_catalog_sky(cat2_coord)
 #   return cat2[idx],d2d
 
+#  LHAASO
 
-
-
-#%%  LHAASO
-
-pth = os.environ['HOME']+'/inafCloud/databases/catalogs/'
 
 def fromLhaaso(file =pth+'lhaaso.txt' ):
 
@@ -218,9 +212,7 @@ def fromLhaaso(file =pth+'lhaaso.txt' ):
 #     p,d = fromGammaCat(sc)
 #     if d < 1*u.deg:
 #       print( s['name'],d.deg , p['common_name'], p['classes'] )
-      
-     
-        
+             
      
 def fromLhaaso90(file =pth+'lhaaso_catalog.fits' ):
 
@@ -234,10 +226,7 @@ def fromLhaaso90(file =pth+'lhaaso_catalog.fits' ):
 
   return ccz
         
-
-#%%
-
-pth = os.environ['HOME']+'/inafCloud/databases/catalogs/'
+#
 
 def fromHawc(file =pth+'3hwc_part1.txt' ):
     
@@ -249,14 +238,9 @@ def fromHawc(file =pth+'3hwc_part1.txt' ):
   ccz = cat(cdc)    
 
   return ccz
-  
 
 
-#%%
-
-
-
-def from_rice( file=os.environ['HOME']+'/inafCloud/MolClouds/MilkyWay/cloud_catalog.fits' ):
+def fromRice( file=os.environ['HOME']+'/inafCloud/MolClouds/MilkyWay/cloud_catalog.fits' ):
         
   cdc = Table.read(file)
   cdc['SkyDir'] = SkyCoord(cdc['l (deg)'], cdc['b (deg)'], unit='deg',frame='galactic')
@@ -268,8 +252,34 @@ def from_rice( file=os.environ['HOME']+'/inafCloud/MolClouds/MilkyWay/cloud_cata
   return ccz
 
 
+def fromGreen(file =pth+'green.fits' ):
+    
+    cdc = Table.read(file)
+    cdc['SkyDir'] = SkyCoord(cdc['LII'], cdc['BII'],frame='galactic')
+    cdc['Size'] = (cdc['MINOR_DIAMETER']+cdc['MAJOR_DIAMETER'])/2.
+    cdc['Name'] = cdc['NAME'][0][4:]
+    for snr in cdc:
+        snr['Name'] = snr['NAME'][4:]
+
+    ccz = cat(cdc)    
+
+    return ccz
 
 
+def fromManitoba(file = pth+'snr/SNRcat20231226-SNR.csv'):
+    
+    cdc = Table.read( file, format ='csv' , delimiter = ';')
+    cdc['SkyDir'] = SkyCoord(cdc['J2000_ra (hh:mm:ss)'], cdc['J2000_dec (dd:mm:ss)'],unit='deg',frame='icrs')
+    cdc['Size'] = cdc['size_coarse (arcmin)']
+    cdc['Name'] = cdc['G']
+    
+    ccz = cat(cdc)    
+
+    return ccz
+   
+    
+        
+    
 
 
 
