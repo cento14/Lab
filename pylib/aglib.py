@@ -12,7 +12,7 @@ def smooth(y, box_pts, filter='box'):
     ff = {'box': ones(box_pts)/box_pts, 'piramid':array([0.1,0.25,0.3,0.25,0.1]) }
     f = ff[filter]
     
-    y_smooth = y
+    y_smooth = y.copy()
     y_smoot = convolve(y, f, mode='valid')
     lag = int(len(f)/2)
     y_smooth[lag:lag+len(y_smoot)] = y_smoot
